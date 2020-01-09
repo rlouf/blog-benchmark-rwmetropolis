@@ -94,7 +94,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--chains", default=4, type=int, help="Number of chains to run")
     parser.add_argument(
-        "--compile_only", type=bool, default=False, help="Whether to time only with compilation"
+        "--precompiled", type=bool, default=False, help="Whether to time with a precompiled model (faster)"
     )
     args = parser.parse_args()
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
             break
     sample.block_until_ready()
 
-    if not args.compile_only:
+    if args.precompiled:
         times = []
         for _ in range(10):
             start = time.time()
