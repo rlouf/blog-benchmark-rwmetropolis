@@ -28,7 +28,7 @@ def rw_metropolis_sampler(n_dims, n_samples, n_chains, target):
     dtype = np.float32
     samples, _ = tfp.mcmc.sample_chain(
         num_results=n_samples,
-        current_state=np.zeros((n_chains, n_dims), dtype=dtype),
+        current_state=np.zeros((n_dims, n_chains), dtype=dtype),
         kernel=tfp.mcmc.RandomWalkMetropolis(target.log_prob, seed=42),
         num_burnin_steps=0,
         parallel_iterations=8,
