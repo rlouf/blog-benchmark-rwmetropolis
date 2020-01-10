@@ -50,15 +50,12 @@ def mixture_logpdf(x):
     np.ndarray (, n_chains)
         The value of the log probability density function at x.
     """
-    log_probs = np.array(
-        [
-            norm(-2.0, 1.2).logpdf(x[0]),
-            norm(0, 1).logpdf(x[1]),
-            norm(3.2, 5).logpdf(x[2]),
-            norm(2.5, 2.8).logpdf(x[3]),
-        ]
-    )
-    weights = np.repeat(np.array([[0.2, 0.3, 0.1, 0.4]]).T, x.shape[1], axis=1)
+    loc = np.array([[-2, 0, 3.2, 2.5]]).T
+    scale = np.array([[1.2, 1, 5, 2.8]]).T
+    weights = np.array([[0.2, 0.3, 0.1, 0.4]]).T
+
+    log_probs = norm(loc, scale).logpdf(x)
+
     return -logsumexp(np.log(weights) - log_probs, axis=0)
 
 

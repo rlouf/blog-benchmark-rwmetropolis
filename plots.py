@@ -7,7 +7,7 @@ from matplotlib import pylab as plt
 # Times in seconds
 n_chains = [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000]
 chains_results = {
-    'Numpy': [3, 3.1, 3.1, 3.5, 7.4, 47.6, 477],
+    'Numpy': [1.2, 1.2, 1.3, 1.6, 5.6, 50, 477],
     'JAX': [0.6, 1.4, 1.7, 3.1, 1.5, 4.3, 26.6],
     'JAX (already compiled)': [0.1, 0.1, 0.1, 0.1, 0.2, 3.3, 25.4],
     'TFP': [7.7, 7.7, 7.8, 8.5, 12.9, np.nan, np.nan],
@@ -38,7 +38,7 @@ plt.savefig('chains.png', bbox_inches='tight', transparent=True)
 # Times in seconds
 n_samples = [1, 10, 100, 1_000, 10_000, 100_000]
 samples_results = {
-    'Numpy': [0.5, 0.5, 0.7, 3.5, 31.6, np.nan],
+    'Numpy': [0.5, 0.5, 0.6, 1.6, 12, 111],
     'JAX': [3.6, 3.6, 3.6, 3.7, 4.7, 14.1],
     'JAX (already compiled)': [0.001, 0.01, 0.01, 0.1, 1, 10.4],
     'TFP': [1.9, 2, 2.5, 8.3, 68 , np.nan],
