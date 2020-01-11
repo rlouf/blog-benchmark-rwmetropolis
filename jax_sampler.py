@@ -8,7 +8,7 @@ from jax.scipy.stats import norm
 from jax.scipy.special import logsumexp
 
 
-@partial(jax.jit, static_argnums=(0, 1))
+@partial(jax.jit, static_argnums=(1,))
 def rw_metropolis_kernel(rng_key, logpdf, position, log_prob):
     """Moves the chains by one step using the Random Walk Metropolis algorithm.
 
@@ -28,11 +28,12 @@ def rw_metropolis_kernel(rng_key, logpdf, position, log_prob):
     Tuple
         The next positions of the chains along with their log probability.
     """
-    move_proposals = jax.random.normal(rng_key, shape=position.shape) * 0.1
+    key1, key2 = jax.random.split(rng_key)
+    move_proposals = jax.random.normal(key1, shape=position.shape) * 0.1
     proposal = position + move_proposals
     proposal_log_prob = logpdf(proposal)
 
-    log_uniform = np.log(jax.random.uniform(rng_key, shape=position.shape))
+    log_uniform = np.log(jax.random.uniform(key2, shape=position.shape))
     do_accept = log_uniform < proposal_log_prob - log_prob
 
     position = np.where(do_accept, proposal, position)
@@ -61,7 +62,8 @@ def rw_metropolis_sampler(rng_key, logpdf, initial_position):
     yield position
 
     while True:
-        position, log_prob = rw_metropolis_kernel(rng_key, logpdf, position, log_prob)
+        rng_key, sub_key = jax.random.split(rng_key)
+        position, log_prob = rw_metropolis_kernel(sub_key, logpdf, position, log_prob)
         yield position
 
 
