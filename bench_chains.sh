@@ -7,4 +7,6 @@ do
 	hyperfine 'python jax_sampler.py --samples 1000 --chains '"$CHAINS"' --precompile True'
 	hyperfine 'python tfp_sampler.py --samples 1000 --chains '$CHAINS
 	hyperfine 'python tfp_sampler.py --samples 1000 --chains '"$CHAINS"' --xla True'
+	hyperfine 'python pytorch_sampler.py --samples 1000 --chains '"$CHAINS"' --xla True'
+	#hyperfine 'python pytorch_sampler_gpu.py --samples 1000 --chains '"$CHAINS"' --xla True'
 done
