@@ -56,7 +56,7 @@ def mixture_logpdf(x):
 
     log_probs = norm(loc, scale).logpdf(x)
 
-    return -logsumexp(np.log(weights) - log_probs, axis=0)
+    return -logsumexp(np.log(weights) + log_probs, axis=0)
 
 
 if __name__ == "__main__":
