@@ -61,7 +61,7 @@ def mixture_logpdf(x):
     """
     log_probs = normal_loc_scale.log_prob(x)
 
-    return -torch.logsumexp(torch.log(weights) + log_probs, axis=0)
+    return torch.logsumexp(torch.log(weights) + log_probs, axis=0)
 
 
 if __name__ == "__main__":

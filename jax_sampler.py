@@ -91,7 +91,7 @@ def mixture_logpdf(x):
     dist_4 = jax.partial(norm.logpdf, loc=2.5, scale=2.8)
     log_probs = np.array([dist_1(x), dist_2(x), dist_3(x), dist_4(x)])
     weights = np.array([0.2, 0.3, 0.1, 0.4])
-    return -logsumexp(np.log(weights) + log_probs)
+    return logsumexp(np.log(weights) + log_probs)
 
 
 if __name__ == "__main__":

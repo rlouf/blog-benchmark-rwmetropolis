@@ -31,7 +31,6 @@ def rw_metropolis_sampler(logpdf, initial_position):
         proposal = position + move_proposals
         proposal_log_prob = logpdf(proposal)
 
-        normal = ()
         log_uniform = torch.log(torch.rand(
             initial_position.shape[0], initial_position.shape[1],
             device=DEVICE))
@@ -64,7 +63,7 @@ def mixture_logpdf(x):
     """
     log_probs = normal_loc_scale.log_prob(x)
 
-    return -torch.logsumexp(torch.log(weights) + log_probs, axis=0)
+    return torch.logsumexp(torch.log(weights) + log_probs, axis=0)
 
 
 if __name__ == "__main__":
