@@ -85,10 +85,10 @@ def mixture_logpdf(x):
     float
         The value of the log probability density function at x.
     """
-    dist_1 = jax.partial(norm.logpdf, loc=-2.0, scale=1.2)
-    dist_2 = jax.partial(norm.logpdf, loc=0, scale=1)
-    dist_3 = jax.partial(norm.logpdf, loc=3.2, scale=5)
-    dist_4 = jax.partial(norm.logpdf, loc=2.5, scale=2.8)
+    dist_1 = partial(norm.logpdf, loc=-2.0, scale=1.2)
+    dist_2 = partial(norm.logpdf, loc=0, scale=1)
+    dist_3 = partial(norm.logpdf, loc=3.2, scale=5)
+    dist_4 = partial(norm.logpdf, loc=2.5, scale=2.8)
     log_probs = np.array([dist_1(x), dist_2(x), dist_3(x), dist_4(x)])
     weights = np.array([0.2, 0.3, 0.1, 0.4])
     return logsumexp(np.log(weights) + log_probs)
@@ -113,10 +113,7 @@ if __name__ == "__main__":
     rng_keys = jax.random.split(rng_key, n_chains)  # (nchains,)
     initial_position = np.zeros((n_dim, n_chains))  # (n_dim, n_chains)
 
-    run_mcmc = jax.vmap(rw_metropolis_sampler, in_axes=(0, None, None, 1),
-                        out_axes=0)
+    run_mcmc = jax.vmap(rw_metropolis_sampler, in_axes=(0, None, None, 1), out_axes=0)
     positions = run_mcmc(rng_keys, n_samples, mixture_logpdf, initial_position)
     assert positions.shape == (n_chains, n_dim)
     positions.block_until_ready()
-
-    # TODO precompile=True logic
