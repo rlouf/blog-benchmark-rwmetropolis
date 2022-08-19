@@ -7,7 +7,7 @@ import tensorflow_probability as tfp
 tfd = tfp.distributions
 
 
-def rw_metropolis_sampler(n_dims, n_samples, n_chains, target):
+def rw_metropolis_sampler(n_samples, n_chains, target):
     """Generate samples using the Random Walk Metropolis algorithm.
 
     Attributes
@@ -28,7 +28,7 @@ def rw_metropolis_sampler(n_dims, n_samples, n_chains, target):
     dtype = np.float32
     samples, _ = tfp.mcmc.sample_chain(
         num_results=n_samples,
-        current_state=np.zeros((n_dims, n_chains), dtype=dtype),
+        current_state=np.zeros(n_chains, dtype=dtype),
         kernel=tfp.mcmc.RandomWalkMetropolis(target.log_prob, seed=42),
         num_burnin_steps=0,
         parallel_iterations=8,
@@ -45,7 +45,6 @@ if __name__ == "__main__":
     parser.add_argument("--xla", default=False, type=bool, help="Use experimental XLA compilation")
     args = parser.parse_args()
 
-    n_dims = 4
     n_samples = args.samples
     n_chains = args.chains
 
@@ -61,7 +60,7 @@ if __name__ == "__main__":
         ],
     )
 
-    run_mcm = partial(rw_metropolis_sampler, n_dims, n_samples, n_chains, target)
+    run_mcm = partial(rw_metropolis_sampler, n_samples, n_chains, target)
     if not args.xla:
         run_mcm()
     else:

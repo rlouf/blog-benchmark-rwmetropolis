@@ -73,11 +73,10 @@ if __name__ == "__main__":
                         help="Number of chains to run")
     args = parser.parse_args()
 
-    n_dims = 4
     n_samples = args.samples
     n_chains = args.chains
 
-    initial_position = torch.zeros((n_dims, n_chains))
+    initial_position = torch.zeros(n_chains)
     samples = rw_metropolis_sampler(mixture_logpdf, initial_position)
     for i, sample in enumerate(samples):
         if i > n_samples:

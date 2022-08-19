@@ -29,7 +29,7 @@ def rw_metropolis_sampler(logpdf, initial_position):
         proposal = position + move_proposals
         proposal_log_prob = logpdf(proposal)
 
-        log_uniform = np.log(np.random.rand(initial_position.shape[0], initial_position.shape[1]))
+        log_uniform = np.log(np.random.rand(*np.shape(initial_position)))
         do_accept = log_uniform < proposal_log_prob - log_prob
 
         position = np.where(do_accept, proposal, position)
@@ -42,12 +42,12 @@ def mixture_logpdf(x):
 
     Attribute
     ---------
-    x: np.ndarray (4, n_chains)
+    x: np.ndarray (n_chains,)
         Position at which to evaluate the probability density function.
 
     Returns
     -------
-    np.ndarray (, n_chains)
+    np.ndarray (n_chains,)
         The value of the log probability density function at x.
     """
     loc = np.array([[-2, 0, 3.2, 2.5]]).T
@@ -67,12 +67,13 @@ if __name__ == "__main__":
     parser.add_argument("--chains", default=4, type=int, help="Number of chains to run")
     args = parser.parse_args()
 
-    n_dims = 4
     n_samples = args.samples
     n_chains = args.chains
 
-    initial_position = np.zeros((n_dims, n_chains))
+    initial_position = np.zeros(n_chains)
     samples = rw_metropolis_sampler(mixture_logpdf, initial_position)
     for i, sample in enumerate(samples):
         if i > n_samples:
             break
+
+    assert sample.shape == (n_chains,)

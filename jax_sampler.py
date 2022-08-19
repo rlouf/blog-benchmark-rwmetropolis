@@ -77,7 +77,7 @@ def mixture_logpdf(x):
 
     Attribute
     ---------
-    x: np.ndarray (4,)
+    x: float
         Position at which to evaluate the probability density function.
 
     Returns
@@ -105,15 +105,14 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    n_dim = 4
     n_samples = args.samples
     n_chains = args.chains
     rng_key = jax.random.PRNGKey(42)
 
     rng_keys = jax.random.split(rng_key, n_chains)  # (nchains,)
-    initial_position = np.zeros((n_dim, n_chains))  # (n_dim, n_chains)
+    initial_position = np.zeros(n_chains)  # (n_chains,)
 
-    run_mcmc = jax.vmap(rw_metropolis_sampler, in_axes=(0, None, None, 1), out_axes=0)
+    run_mcmc = jax.vmap(rw_metropolis_sampler, in_axes=(0, None, None, 0), out_axes=0)
     positions = run_mcmc(rng_keys, n_samples, mixture_logpdf, initial_position)
-    assert positions.shape == (n_chains, n_dim)
+    assert positions.shape == (n_chains,)
     positions.block_until_ready()
